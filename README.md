@@ -3,7 +3,16 @@
 ### Author: Gustavo Wydler Azuaga
 ### Release date: 05/23/2024
 
-PAM_faillock console is a bash console to view pam unlock time and failed attempts, and setup these values
+PAM_faillock console is a bash console to view pam unlock time and failed attempts values, and setup/reconfigure these as needed.
+
+#### Features and functionality:
+
+ - The unlock_time value in config files (amount of seconds an account will be locked for)
+ - The deny in config files (amount of fail attempts until lockdown)
+ - Provides options to change these values in all files
+ - Has an sshd daemon action. This enables the user to operate with the daemon without exiting the program.
+
+#### Setup and configuration of PAM files
 
 - To ensure pam_faillock works, follow the below mentioned procedure:
   - Log in with root
