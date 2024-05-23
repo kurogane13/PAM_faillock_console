@@ -54,7 +54,7 @@ show_unlock_time() {
   echo
   cat /etc/pam.d/password-auth | grep unlock_time
   echo
-  echo "Showing unlock time in /etc/pam.d/sshd_config"
+  echo "Showing unlock time in /etc/pam.d/sshd"
   echo
   cat /etc/pam.d/sshd | grep unlock_time
   echo
