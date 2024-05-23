@@ -1,4 +1,12 @@
 
+check_and_create_faillock_dir() {
+  if [ ! -d /var/run/faillock ]; then
+    sudo mkdir -p /var/run/faillock
+    sudo chown root:root /var/run/faillock
+    sudo chmod 700 /var/run/faillock
+  fi
+}
+
 ssh_action() {
   echo
   read -p "Select an action for SSH daemon (start|stop|status|restart): " action
@@ -197,6 +205,7 @@ menu() {
 }
 
 # Main loop
+check_and_create_faillock_dir
 while true; do
   menu
 done
