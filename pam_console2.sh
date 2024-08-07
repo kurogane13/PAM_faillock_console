@@ -1,12 +1,87 @@
 #!/bin/bash
 
-check_and_create_faillock_dir() {
+check_and_setup_faillock() {
+  echo
+  echo "Checking and setting up faillock..."
+
+  # Check and create directories if not exist
+  echo
+  echo "Checking directory /var/log/faillock..."
+  if [ ! -d /var/log/faillock ]; then
+    echo "Directory /var/log/faillock does not exist. Creating it..."
+    sudo mkdir -p /var/log/faillock
+    sudo chown root:root /var/log/faillock
+    sudo chmod 700 /var/log/faillock
+    echo
+    ls -lhad /var/log/faillock
+    echo
+    echo "Directory /var/log/faillock created."
+  else
+    echo
+    ls -lhad /var/log/faillock
+    echo
+    echo "Directory /var/log/faillock already exists."
+  fi
+
+  echo
+  echo "Checking directory /var/run/faillock..."
   if [ ! -d /var/run/faillock ]; then
-    sudo mkdir -p /var/run/faillock
+    echo "Directory /var/run/faillock does not exist. Creating it..."
+    mkdir -p /var/run/faillock
     sudo chown root:root /var/run/faillock
     sudo chmod 700 /var/run/faillock
+    echo
+    ls -lhad /var/run/faillock
+    echo
+    echo "Directory /var/run/faillock created."
+  else
+    echo
+    ls -lhad /var/run/faillock
+    echo
+    echo "Directory /var/run/faillock already exists."
+  fi
+
+  # Check if faillock utility is installed
+  echo
+  echo "Checking if faillock utility is installed at /usr/sbin/faillock..."
+  if [ ! -f /usr/sbin/faillock ]; then
+    echo "Faillock utility is not installed. Installing it..."
+    # Assuming the system uses yum for package management
+    if command -v yum >/dev/null 2>&1; then
+      yum install -y pam
+      echo
+      which faillock
+      echo
+      echo "Faillock utility installed using yum."
+    elif command -v apt-get >/dev/null 2>&1; then
+      apt-get update
+      apt-get install -y libpam-modules
+      echo
+      which faillock
+      echo
+      echo "Faillock utility installed using apt-get."
+    else
+      echo
+      echo "Package manager not recognized. Please install 'faillock' manually."
+      return 1
+    fi
+  else
+    echo
+    which faillock
+    echo
+    echo "Faillock utility is already installed."
+  fi
+
+  # Verify installation
+  echo
+  if [ -f /usr/sbin/faillock ]; then
+    echo "Faillock utility installation verified successfully."
+  else
+    echo "Faillock utility installation failed. Please check your package manager."
+    return 1
   fi
 }
+
 
 ssh_action() {
   echo
@@ -407,5 +482,11 @@ menu() {
   esac
 }
 
-check_and_create_faillock_dir
+check_and_setup_faillock
+echo ""
+echo "-----------------------------------------------------------"
+echo
+echo "$(date +'%Y-%m-%d %H:%M:%S')"
+echo
+read -p "Press enter to start the program now: "
 menu
